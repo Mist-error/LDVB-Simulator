@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>LVDB Simulator – DEWA Standard</title>
+  <meta name="description"
+    content="Interactive Low Voltage Distribution Board Simulator with fault simulation based on DEWA standards">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1: Fault Selection                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="fault-selection-screen" class="screen active">
+    <div class="fault-selection-container">
+      <div class="fault-header">
+        <div class="fault-icon-bar"></div>
+        <h1>LVDB Fault Simulator</h1>
+        <p class="fault-subtitle">DEWA Standard Based Interactive Simulation</p>
+      </div>
+
+      <div class="fault-instruction">
+        <span>Kindly Select the Faulty Circuit</span>
+      </div>
+
+      <div class="fault-groups">
+        <div class="fault-group">
+          <div class="fault-group-header">
+            <h2>ELCB-1</h2><span class="fault-group-spec">40A | 100mA</span>
+          </div>
+          <div class="fault-buttons">
+            <button class="fault-btn" data-elcb="1" data-mcb="1">MCB 1</button>
+            <button class="fault-btn" data-elcb="1" data-mcb="2">MCB 2</button>
+            <button class="fault-btn" data-elcb="1" data-mcb="3">MCB 3</button>
+            <button class="fault-btn" data-elcb="1" data-mcb="4">MCB 4</button>
+            <button class="fault-btn" data-elcb="1" data-mcb="5">MCB 5</button>
+            <button class="fault-btn" data-elcb="1" data-mcb="6">MCB 6</button>
+          </div>
+        </div>
+
+        <div class="fault-group">
+          <div class="fault-group-header">
+            <h2>ELCB-2</h2><span class="fault-group-spec">40A | 30mA</span>
+          </div>
+          <div class="fault-buttons">
+            <button class="fault-btn" data-elcb="2" data-mcb="1">MCB 7</button>
+            <button class="fault-btn" data-elcb="2" data-mcb="2">MCB 8</button>
+            <button class="fault-btn" data-elcb="2" data-mcb="3">MCB 9</button>
+            <button class="fault-btn" data-elcb="2" data-mcb="4">MCB 10</button>
+            <button class="fault-btn" data-elcb="2" data-mcb="5">MCB 11</button>
+            <button class="fault-btn" data-elcb="2" data-mcb="6">MCB 12</button>
+          </div>
+        </div>
+
+        <div class="fault-group">
+          <div class="fault-group-header">
+            <h2>ELCB-3</h2><span class="fault-group-spec">40A | 30mA | UVR + Timer</span>
+          </div>
+          <div class="fault-buttons">
+            <button class="fault-btn" data-elcb="3" data-mcb="1">MCB 13</button>
+            <button class="fault-btn" data-elcb="3" data-mcb="2">MCB 14</button>
+            <button class="fault-btn" data-elcb="3" data-mcb="3">MCB 15</button>
+            <button class="fault-btn" data-elcb="3" data-mcb="4">MCB 16</button>
+            <button class="fault-btn" data-elcb="3" data-mcb="5">MCB 17</button>
+            <button class="fault-btn" data-elcb="3" data-mcb="6">MCB 18</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="no-fault-btn" id="no-fault-btn">Normal Operation (No Fault)</button>
+        <button class="random-fault-btn" id="random-fault-btn">Randomized (Blind Test)</button>
+      </div>
+
+      <!-- New Multi-Fault Launch Button -->
+      <div class="launch-control">
+        <button id="start-sim-btn" class="start-sim-btn">INITIALIZE SYSTEM</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2: LVDB Simulator                    -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="simulator-screen" class="screen">
+    <!-- Header -->
+    <header id="board-header">
+      <h1>Distribution Board</h1>
+      <div class="header-right">
+        <div class="header-badge" id="fault-badge" style="display:none;">
+          <span class="badge-dot"></span><span id="fault-badge-text">Fault Simulated</span>
+        </div>
+        <button id="top-reset-btn" class="header-btn">Reset Simulator</button>
+      </div>
+    </header>
+
+    <!-- Main Board Area -->
+    <div class="board-container">
+
+      <!-- ── ROW 1: MCB Groups ── -->
+      <div class="layout-row mcb-groups-row">
+
+        <!-- Column 1 MCBs -->
+        <div class="column">
+          <div class="mcb-group-wrapper">
+            <div class="mcb-panel" id="elcb1-panel">
+              <div class="mcb-slots">
+                <div class="mcb" id="mcb-1-1" data-elcb="1" data-mcb="1"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 1</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-1-2" data-elcb="1" data-mcb="2"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 2</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-1-3" data-elcb="1" data-mcb="3"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 3</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-1-4" data-elcb="1" data-mcb="4"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 4</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-1-5" data-elcb="1" data-mcb="5"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 5</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-1-6" data-elcb="1" data-mcb="6"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 6</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+              </div>
+              <div class="mcb-panel-footer">SECTION 1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2 MCBs -->
+        <div class="column">
+          <div class="mcb-group-wrapper">
+            <div class="mcb-panel" id="elcb2-panel">
+              <div class="mcb-slots">
+                <!-- Actual functioning MCBs -->
+                <div class="mcb" id="mcb-2-1" data-elcb="2" data-mcb="1"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 7</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-2-2" data-elcb="2" data-mcb="2"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 8</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-2-3" data-elcb="2" data-mcb="3"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 9</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-2-4" data-elcb="2" data-mcb="4"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 10</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-2-5" data-elcb="2" data-mcb="5"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 11</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-2-6" data-elcb="2" data-mcb="6"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 12</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+              </div>
+              <div class="mcb-panel-footer">SECTION 2</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3 MCBs -->
+        <div class="column">
+          <div class="mcb-group-wrapper">
+            <div class="mcb-panel" id="elcb3-panel">
+              <div class="mcb-slots">
+                <!-- Actual functioning MCBs -->
+                <div class="mcb" id="mcb-3-1" data-elcb="3" data-mcb="1"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 13</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-3-2" data-elcb="3" data-mcb="2"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 14</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-3-3" data-elcb="3" data-mcb="3"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 15</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-3-4" data-elcb="3" data-mcb="4"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 16</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-3-5" data-elcb="3" data-mcb="5"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 17</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+                <div class="mcb" id="mcb-3-6" data-elcb="3" data-mcb="6"><span class="mcb-screw top"></span>
+                  <div class="mcb-label">MCB 18</div>
+                  <div class="mcb-switch-area">
+                    <div class="mcb-knob"></div>
+                  </div>
+                  <div class="mcb-led-dot"></div><span class="mcb-screw bottom"></span>
+                </div>
+              </div>
+              <div class="mcb-panel-footer">SECTION 3</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── ROW 2: ELCBs and ISOLATOR ── -->
+      <div class="layout-row elcb-diagrams-row">
+
+        <!-- Isolator Only Box -->
+        <div class="elcb-huge-panel isolator-unit-box">
+          <div class="elcb-screws-top"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+          <div class="isolator-panel">
+            <div class="isolator-title">4-Pole Isolator</div>
+            <div class="isolator-switch" id="isolator-switch">
+              <div class="iso-switch-recess">
+                <div class="iso-knob iso-label">OFF</div>
+              </div>
+            </div>
+            <div class="isolator-indicators">
+              <span class="iso-ind red"></span><span class="iso-ind yellow"></span><span class="iso-ind blue"></span><span class="iso-ind green"></span>
+            </div>
+          </div>
+          <div class="elcb-screws-bottom"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+        </div>
+
+        <!-- Column 1: ELCB 1 Box -->
+        <div class="column">
+          <div class="elcb-huge-panel elcb-unit-box">
+            <div class="elcb-screws-top"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+            <div class="elcb-tools-diagram elcb-unit" id="elcb-unit-1" data-elcb="1">
+                <div class="elcb-controls">
+                  <button class="elcb-test-btn" data-elcb="1">TEST</button>
+                  <div class="elcb-switch-area">
+                    <div class="elcb-knob"></div>
+                  </div>
+                  <div class="elcb-indicators-row">
+                    <div class="elcb-indicator-dot elcb-on-wrapper"><span class="elcb-led-on"></span><span class="ind-label">ON</span></div>
+                    <div class="elcb-indicator-dot elcb-trip-wrapper"><span class="elcb-led-trip"></span><span class="ind-label">TRIP</span></div>
+                  </div>
+                </div>
+                <div class="elcb-info-display">
+                  <div class="info-text-line title">ELCB-1 (Section 1)</div>
+                  <div class="info-text-line">Voltage: 230 V</div>
+                  <div class="info-text-line">Current: 40 A</div>
+                </div>
+            </div>
+            <div class="elcb-screws-bottom"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+          </div>
+        </div>
+
+        <!-- Column 2: ELCB 2 Box -->
+        <div class="column">
+          <div class="elcb-huge-panel elcb-unit-box">
+            <div class="elcb-screws-top"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+            <div class="elcb-tools-diagram elcb-unit" id="elcb-unit-2" data-elcb="2">
+                <div class="elcb-controls">
+                  <button class="elcb-test-btn" data-elcb="2">TEST</button>
+                  <div class="elcb-switch-area">
+                    <div class="elcb-knob"></div>
+                  </div>
+                  <div class="elcb-indicators-row">
+                    <div class="elcb-indicator-dot elcb-on-wrapper"><span class="elcb-led-on"></span><span class="ind-label">ON</span></div>
+                    <div class="elcb-indicator-dot elcb-trip-wrapper"><span class="elcb-led-trip"></span><span class="ind-label">TRIP</span></div>
+                  </div>
+                </div>
+                <div class="elcb-info-display">
+                  <div class="info-text-line title">ELCB-2 (Section 2)</div>
+                  <div class="info-text-line">Voltage: 230 V</div>
+                  <div class="info-text-line">Current: 40 A</div>
+                </div>
+            </div>
+            <div class="elcb-screws-bottom"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+          </div>
+        </div>
+
+        <!-- Column 3: ELCB 3 Box -->
+        <div class="column">
+          <div class="elcb-huge-panel elcb-unit-box">
+            <div class="elcb-screws-top"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+            <div class="elcb-tools-diagram elcb-unit" id="elcb-unit-3" data-elcb="3">
+                <div class="elcb-controls">
+                  <button class="elcb-test-btn" data-elcb="3">TEST</button>
+                  <div class="elcb-switch-area">
+                    <div class="elcb-knob"></div>
+                  </div>
+                  <div class="elcb-indicators-row">
+                    <div class="elcb-indicator-dot elcb-on-wrapper"><span class="elcb-led-on"></span><span class="ind-label">ON</span></div>
+                    <div class="elcb-indicator-dot elcb-trip-wrapper"><span class="elcb-led-trip"></span><span class="ind-label">TRIP</span></div>
+                  </div>
+                </div>
+                <div class="elcb-info-display">
+                  <div class="info-text-line title">ELCB-3 (Section 3)</div>
+                  <div class="info-text-line">Voltage: 230 V</div>
+                  <div class="info-text-line">Rating: 40 A</div>
+                </div>
+            </div>
+            <div class="elcb-screws-bottom"><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span><span class="mcb-screw"></span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── ROW 3: INFO PANELS ── -->
+      <div class="layout-row info-panels-row">
+        <!-- Info Panel 1 -->
+        <div class="column">
+          <div class="info-panel" id="info-panel-1">
+            <div class="info-panel-header">ELCB-1</div>
+            <div class="info-panel-body">
+              <div class="info-row">Voltage: <span class="info-value" id="val-volt-1">0 V</span></div>
+              <div class="info-row">Current: <span class="info-value" id="val-curr-1">0 A</span></div>
+              <div class="info-row leakage-row" style="display:none"><span id="val-leak-1">0 mA</span></div>
+              <div style="display:none" id="voltage-1"></div>
+              <div style="display:none" id="current-1"></div>
+              <div style="display:none" id="leakage-1"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Info Panel 2 -->
+        <div class="column">
+          <div class="info-panel" id="info-panel-2">
+            <div class="info-panel-header">ELCB-2</div>
+            <div class="info-panel-body">
+              <div class="info-row">Voltage: <span class="info-value" id="val-volt-2">0 V</span></div>
+              <div class="info-row">Current: <span class="info-value" id="val-curr-2">0 A</span></div>
+              <div class="info-row leakage-row" style="display:none"><span id="val-leak-2">0 mA</span></div>
+              <div style="display:none" id="voltage-2"></div>
+              <div style="display:none" id="current-2"></div>
+              <div style="display:none" id="leakage-2"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Info Panel 3 -->
+        <div class="column">
+          <div class="info-panel" id="info-panel-3">
+            <div class="info-panel-header">ELCB-3</div>
+            <div class="info-panel-body">
+              <div class="info-row">Voltage: <span class="info-value" id="val-volt-3">0 V</span></div>
+              <div class="info-row">Current: <span class="info-value" id="val-curr-3">0 A</span></div>
+              <div class="info-row leakage-row" style="display:none"><span id="val-leak-3">0 mA</span></div>
+              <div style="display:none" id="voltage-3"></div>
+              <div style="display:none" id="current-3"></div>
+              <div style="display:none" id="leakage-3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── EVENT LOG & CONTROLS ── -->
+    <div class="bottom-bar">
+      <div class="event-log" id="event-log">
+        <div class="event-log-header">
+          <span>EVENT SYSTEM LOG</span>
+          <button id="clear-log-btn" class="clear-log-btn" title="Clear log">CLEAR</button>
+        </div>
+        <div class="event-log-messages" id="event-messages">
+          <div class="event-msg info">System ready. Turn ON the Main Isolator to begin.</div>
+        </div>
+      </div>
+      <div class="control-buttons">
+        <button id="back-btn" class="ctrl-btn back-btn">
+          BACK TO CONFIG
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="switch-sound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
